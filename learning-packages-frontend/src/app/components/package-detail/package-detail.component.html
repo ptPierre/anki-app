@@ -1,0 +1,10 @@
+<h2>Package Details</h2>
+<div *ngIf="package">
+  <p><strong>Title:</strong> {{ package.title }}</p>
+  <p><strong>Description:</strong> {{ package.description }}</p>
+  <p><strong>Category:</strong> {{ package.category }}</p>
+  <p><strong>Target Audience:</strong> {{ package.targetAudience }}</p>
+  <p><strong>Difficulty Level:</strong> {{ package.difficultyLevel }}</p>
+  <button (click)="goBack()">Back to List</button>
+</div>
+
