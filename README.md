@@ -6,7 +6,11 @@
 npm install
 cd backend
 npm run dev
-cd ../learning-packages-frontend
+```
+
+Open a second terminal and run:
+```
+cd learning-packages-frontend
 ng serve
 ```
 
