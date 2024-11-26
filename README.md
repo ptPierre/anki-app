@@ -3,14 +3,15 @@
 ## Running the code
 
 ```
-npm install
 cd backend
+npm install
 npm run dev
 ```
 
 Open a second terminal and run:
 ```
 cd learning-packages-frontend
+npm install
 ng serve
 ```
 
