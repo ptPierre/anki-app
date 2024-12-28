@@ -1,50 +1,62 @@
-<h2>{{ isEditMode ? 'Edit' : 'Create' }} Learning Package</h2>
-<form (submit)="onSubmit()">
-  <div>
-    <label for="title">Title</label>
-    <input
-      id="title"
-      type="text"
-      (input)="setPackageField('title', $event)"
-      [value]="package.title"
-    />
+<div class="row">
+  <div class="col-md-8 offset-md-2">
+    <h2 class="mb-4">{{ isEditMode ? 'Edit' : 'Create' }} Learning Package</h2>
+    <form (submit)="onSubmit()">
+      <div class="mb-3">
+        <label for="title" class="form-label">Title</label>
+        <input
+          id="title"
+          type="text"
+          class="form-control"
+          (input)="setPackageField('title', $event)"
+          [value]="package.title"
+        />
+      </div>
+      <div class="mb-3">
+        <label for="description" class="form-label">Description</label>
+        <textarea
+          id="description"
+          class="form-control"
+          rows="3"
+          (input)="setPackageField('description', $event)"
+        >{{ package.description }}</textarea>
+      </div>
+      <div class="mb-3">
+        <label for="category" class="form-label">Category</label>
+        <input
+          id="category"
+          type="text"
+          class="form-control"
+          (input)="setPackageField('category', $event)"
+          [value]="package.category"
+        />
+      </div>
+      <div class="mb-3">
+        <label for="targetAudience" class="form-label">Target Audience</label>
+        <input
+          id="targetAudience"
+          type="text"
+          class="form-control"
+          (input)="setPackageField('targetAudience', $event)"
+          [value]="package.targetAudience"
+        />
+      </div>
+      <div class="mb-3">
+        <label for="difficultyLevel" class="form-label">Difficulty Level</label>
+        <input
+          id="difficultyLevel"
+          type="number"
+          class="form-control"
+          (input)="setPackageField('difficultyLevel', $event)"
+          [value]="package.difficultyLevel"
+          min="1"
+          max="10"
+        />
+      </div>
+      <div class="d-flex gap-2">
+        <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="button" class="btn btn-secondary" (click)="cancel()">Cancel</button>
+      </div>
+    </form>
   </div>
-  <div>
-    <label for="description">Description</label>
-    <textarea
-      id="description"
-      (input)="setPackageField('description', $event)"
-    >{{ package.description }}</textarea>
-  </div>
-  <div>
-    <label for="category">Category</label>
-    <input
-      id="category"
-      type="text"
-      (input)="setPackageField('category', $event)"
-      [value]="package.category"
-    />
-  </div>
-  <div>
-    <label for="targetAudience">Target Audience</label>
-    <input
-      id="targetAudience"
-      type="text"
-      (input)="setPackageField('targetAudience', $event)"
-      [value]="package.targetAudience"
-    />
-  </div>
-  <div>
-    <label for="difficultyLevel">Difficulty Level</label>
-    <input
-      id="difficultyLevel"
-      type="number"
-      (input)="setPackageField('difficultyLevel', $event)"
-      [value]="package.difficultyLevel"
-      min="1"
-      max="10"
-    />
-  </div>
-  <button type="submit">Submit</button>
-  <button type="button" (click)="cancel()">Cancel</button>
-</form>
+</div>

@@ -1,27 +1,29 @@
 <h2>Learning Packages</h2>
 <button (click)="addPackage()">Add new Package</button>
+
 <table>
   <thead>
-  <tr>
-    <th>Title</th>
-    <th>Category</th>
-    <th>Audience</th>
-    <th>Difficulty</th>
-    <th>Actions</th>
-  </tr>
+    <tr>
+      <th>Title</th>
+      <th>Category</th>
+      <th>Audience</th>
+      <th>Difficulty</th>
+      <th>Actions</th>
+    </tr>
   </thead>
   <tbody>
-  <tr *ngFor="let pkg of packages">
-    <td>{{ pkg.title }}</td>
-    <td>{{ pkg.category }}</td>
-    <td>{{ pkg.targetAudience }}</td>
-    <td>{{ pkg.difficultyLevel }}</td>
-    <td>
-      <button (click)="viewDetails(pkg.id)">View</button>
-      <button (click)="editPackage(pkg.id)">Edit</button>
-      <button (click)="deletePackage(pkg.id)">Delete</button>
-    </td>
-  </tr>
+    <tr *ngFor="let pkg of packages">
+      <td>{{ pkg.title }}</td>
+      <td>{{ pkg.category }}</td>
+      <td>{{ pkg.targetAudience }}</td>
+      <td>{{ pkg.difficultyLevel }}</td>
+      <td>
+        <button (click)="viewDetails(pkg.id)">View</button>
+        <button (click)="editPackage(pkg.id)">Edit</button>
+        <button (click)="deletePackage(pkg.id)">Delete</button>
+      </td>
+    </tr>
   </tbody>
 </table>
+
 

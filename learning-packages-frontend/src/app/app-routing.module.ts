@@ -5,7 +5,7 @@ import { PackageListComponent } from './components/package-list/package-list.com
 import { PackageDetailComponent } from './components/package-detail/package-detail.component';
 import { PackageFormComponent } from './components/package-form/package-form.component';
 
-export const routes: Routes = [ // Add 'export' here
+export const routes: Routes = [
   { path: '', redirectTo: '/packages', pathMatch: 'full' },
   { path: 'packages', component: PackageListComponent },
   { path: 'packages/new', component: PackageFormComponent },

@@ -1,10 +1,22 @@
-<h2>Package Details</h2>
-<div *ngIf="package">
-  <p><strong>Title:</strong> {{ package.title }}</p>
-  <p><strong>Description:</strong> {{ package.description }}</p>
-  <p><strong>Category:</strong> {{ package.category }}</p>
-  <p><strong>Target Audience:</strong> {{ package.targetAudience }}</p>
-  <p><strong>Difficulty Level:</strong> {{ package.difficultyLevel }}</p>
-  <button (click)="goBack()">Back to List</button>
+<div class="card">
+  <div class="card-body">
+    <h2 class="card-title">{{ package.title }}</h2>
+    <p class="card-text">{{ package.description }}</p>
+    <dl class="row">
+      <dt class="col-sm-3">Category</dt>
+      <dd class="col-sm-9">{{ package.category }}</dd>
+
+      <dt class="col-sm-3">Target Audience</dt>
+      <dd class="col-sm-9">{{ package.targetAudience }}</dd>
+
+      <dt class="col-sm-3">Difficulty Level</dt>
+      <dd class="col-sm-9">{{ package.difficultyLevel }}/10</dd>
+    </dl>
+    <div class="d-flex gap-2">
+      <button class="btn btn-primary" (click)="editPackage()">Edit</button>
+      <button class="btn btn-danger" (click)="deletePackage()">Delete</button>
+      <button class="btn btn-secondary" (click)="goBack()">Back</button>
+    </div>
+  </div>
 </div>
 
