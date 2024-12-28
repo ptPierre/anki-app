@@ -33,6 +33,23 @@ export class PackageDetailComponent implements OnInit {
     });
   }
 
+  editPackage(): void {
+    this.router.navigate(['/packages/edit', this.package.id]);
+  }
+
+  deletePackage(): void {
+    if (confirm('Are you sure you want to delete this package?')) {
+      this.packageService.deletePackage(this.package.id).subscribe(
+        () => {
+          this.router.navigate(['/packages']);
+        },
+        (error) => {
+          console.error('Error deleting package:', error);
+        }
+      );
+    }
+  }
+
   goBack(): void {
     this.router.navigate(['/packages']);
   }
