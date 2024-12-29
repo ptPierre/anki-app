@@ -12,10 +12,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const learningPackage_model_1 = require("../models/learningPackage.model");
 const router = (0, express_1.Router)();
-// Get all learning packages
+// Get all learning packages for a user
 router.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const packages = yield learningPackage_model_1.LearningPackage.findAll();
+        const userId = req.query.userId;
+        if (!userId) {
+            return res.status(400).send('UserId is required');
+        }
+        const packages = yield learningPackage_model_1.LearningPackage.findAll({
+            where: { userId }
+        });
         res.json(packages);
     }
     catch (err) {
@@ -26,7 +32,13 @@ router.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 router.get('/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const id = parseInt(req.params.id);
-        const pkg = yield learningPackage_model_1.LearningPackage.findByPk(id);
+        const userId = req.query.userId;
+        if (!userId) {
+            return res.status(400).send('UserId is required');
+        }
+        const pkg = yield learningPackage_model_1.LearningPackage.findOne({
+            where: { id, userId }
+        });
         if (pkg) {
             res.json(pkg);
         }
@@ -40,12 +52,19 @@ router.get('/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () 
 }));
 // Create a new learning package
 router.post('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { title, description, category, targetAudience, difficultyLevel } = req.body;
-    if (!title || !description || !category || !targetAudience || !difficultyLevel) {
+    const { title, description, category, targetAudience, difficultyLevel, userId } = req.body;
+    if (!title || !description || !category || !targetAudience || !difficultyLevel || !userId) {
         return res.status(400).send('Missing mandatory fields');
     }
     try {
-        const newPackage = yield learningPackage_model_1.LearningPackage.create({ title, description, category, targetAudience, difficultyLevel });
+        const newPackage = yield learningPackage_model_1.LearningPackage.create({
+            title,
+            description,
+            category,
+            targetAudience,
+            difficultyLevel,
+            userId
+        });
         res.status(201).json(newPackage);
     }
     catch (err) {
@@ -56,7 +75,13 @@ router.post('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 router.put('/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const id = parseInt(req.params.id);
-        const pkg = yield learningPackage_model_1.LearningPackage.findByPk(id);
+        const userId = req.body.userId;
+        if (!userId) {
+            return res.status(400).send('UserId is required');
+        }
+        const pkg = yield learningPackage_model_1.LearningPackage.findOne({
+            where: { id, userId }
+        });
         if (!pkg) {
             return res.status(404).send(`Entity not found for id: ${id}`);
         }
@@ -71,25 +96,21 @@ router.put('/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () 
 router.delete('/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const id = parseInt(req.params.id);
-        const pkg = yield learningPackage_model_1.LearningPackage.findByPk(id);
+        const userId = req.query.userId;
+        if (!userId) {
+            return res.status(400).send('UserId is required');
+        }
+        const pkg = yield learningPackage_model_1.LearningPackage.findOne({
+            where: { id, userId }
+        });
         if (!pkg) {
             return res.status(404).send(`Entity not found for id: ${id}`);
         }
         yield pkg.destroy();
-        res.status(204).send(); // 204 No Content
+        res.status(204).send();
     }
     catch (err) {
         res.status(500).send('Error deleting the learning package');
-    }
-}));
-// Get package summaries
-router.get('/summaries', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const summaries = yield learningPackage_model_1.LearningPackage.findAll({ attributes: ['id', 'title'] });
-        res.json(summaries);
-    }
-    catch (err) {
-        res.status(500).send('Error fetching package summaries');
     }
 }));
 exports.default = router;

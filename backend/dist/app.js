@@ -14,20 +14,32 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const learningPackage_routes_1 = __importDefault(require("./routes/learningPackage.routes"));
+const auth_routes_1 = __importDefault(require("./routes/auth.routes"));
 const database_config_1 = require("./config/database.config");
 const learningPackage_model_1 = require("./models/learningPackage.model");
 const cors_1 = __importDefault(require("cors"));
+const user_model_1 = require("./models/user.model");
+const bcrypt_1 = __importDefault(require("bcrypt"));
 const app = (0, express_1.default)();
 const port = 3000;
 app.use((0, cors_1.default)());
 app.use(express_1.default.json());
 app.use('/api/package', learningPackage_routes_1.default);
+app.use('/api/auth', auth_routes_1.default);
 app.get('/api/liveness', (req, res) => {
     res.status(200).send('OK');
 });
 // Function to preload data into the database
 function preloadData() {
     return __awaiter(this, void 0, void 0, function* () {
+        let user = yield user_model_1.User.findOne();
+        if (!user) {
+            const hashedPassword = yield bcrypt_1.default.hash('demo123', 10); // Hash the password
+            user = yield user_model_1.User.create({
+                username: 'demo',
+                password: hashedPassword // Store hashed password
+            });
+        }
         const count = yield learningPackage_model_1.LearningPackage.count();
         if (count === 0) {
             yield learningPackage_model_1.LearningPackage.bulkCreate([
@@ -37,6 +49,7 @@ function preloadData() {
                     category: 'Programming',
                     targetAudience: 'Developers',
                     difficultyLevel: 5,
+                    userId: user.id,
                 },
                 {
                     title: 'Learn NodeJs',
@@ -44,6 +57,7 @@ function preloadData() {
                     category: 'Programming',
                     targetAudience: 'Developers',
                     difficultyLevel: 6,
+                    userId: user.id,
                 },
                 {
                     title: 'Learn Html',
@@ -51,6 +65,7 @@ function preloadData() {
                     category: 'Web Development',
                     targetAudience: 'Beginners',
                     difficultyLevel: 2,
+                    userId: user.id,
                 },
                 {
                     title: 'Learn Angular',
@@ -58,6 +73,7 @@ function preloadData() {
                     category: 'Programming',
                     targetAudience: 'Frontend Developers',
                     difficultyLevel: 8,
+                    userId: user.id,
                 },
             ]);
             console.log('Preloaded LearningPackages into the database.');
@@ -70,8 +86,9 @@ app.listen(port, () => __awaiter(void 0, void 0, void 0, function* () {
         // Connect to the database
         yield database_config_1.sequelize.authenticate();
         console.log('Database connected successfully.');
-        // Synchronize database tables
-        yield database_config_1.sequelize.sync();
+        // Drop and recreate tables
+        yield database_config_1.sequelize.sync({ force: true });
+        console.log('Database tables dropped and recreated.');
         // Preload initial data
         yield preloadData();
     }

@@ -1,7 +1,10 @@
-import { DataTypes, Model } from 'sequelize';
+import { DataTypes, Model, ForeignKey } from 'sequelize';
 import { sequelize } from '../config/database.config';
+import { User } from './user.model';
 
-export class LearningPackage extends Model {}
+export class LearningPackage extends Model {
+    declare userId: ForeignKey<User['id']>;
+}
 
 LearningPackage.init(
     {
@@ -11,6 +14,11 @@ LearningPackage.init(
         category: { type: DataTypes.STRING, allowNull: false },
         targetAudience: { type: DataTypes.STRING, allowNull: false },
         difficultyLevel: { type: DataTypes.INTEGER, allowNull: false },
+        userId: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            references: { model: 'Users', key: 'id' },
+          },
     },
     {
         sequelize,
@@ -20,4 +28,3 @@ LearningPackage.init(
     }
 );
 
-sequelize.sync();

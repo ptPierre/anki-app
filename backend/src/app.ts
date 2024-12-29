@@ -1,8 +1,11 @@
 import express, { Request, Response } from 'express';
 import learningPackageRoutes from './routes/learningPackage.routes';
+import authRoutes from './routes/auth.routes';
 import { sequelize } from './config/database.config';
 import { LearningPackage } from './models/learningPackage.model';
 import cors from 'cors';
+import { User } from './models/user.model';
+import bcrypt from 'bcrypt'; 
 
 
 const app = express();
@@ -13,6 +16,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use('/api/package', learningPackageRoutes);
+app.use('/api/auth', authRoutes);
 
 
 app.get('/api/liveness', (req: Request, res: Response) => {
@@ -22,6 +26,15 @@ app.get('/api/liveness', (req: Request, res: Response) => {
 
 // Function to preload data into the database
 async function preloadData() {
+    let user = await User.findOne();
+    if (!user) {
+        const hashedPassword = await bcrypt.hash('demo123', 10);  // Hash the password
+        user = await User.create({ 
+            username: 'demo', 
+            password: hashedPassword  // Store hashed password
+        });
+    }
+
     const count = await LearningPackage.count();
     if (count === 0) {
         await LearningPackage.bulkCreate([
@@ -31,6 +44,7 @@ async function preloadData() {
                 category: 'Programming',
                 targetAudience: 'Developers',
                 difficultyLevel: 5,
+                userId: user.id,
             },
             {
                 title: 'Learn NodeJs',
@@ -38,6 +52,7 @@ async function preloadData() {
                 category: 'Programming',
                 targetAudience: 'Developers',
                 difficultyLevel: 6,
+                userId: user.id,
             },
             {
                 title: 'Learn Html',
@@ -45,6 +60,7 @@ async function preloadData() {
                 category: 'Web Development',
                 targetAudience: 'Beginners',
                 difficultyLevel: 2,
+                userId: user.id,
             },
             {
                 title: 'Learn Angular',
@@ -52,6 +68,7 @@ async function preloadData() {
                 category: 'Programming',
                 targetAudience: 'Frontend Developers',
                 difficultyLevel: 8,
+                userId: user.id,
             },
         ]);
         console.log('Preloaded LearningPackages into the database.');
@@ -65,8 +82,9 @@ app.listen(port, async () => {
         await sequelize.authenticate();
         console.log('Database connected successfully.');
 
-        // Synchronize database tables
-        await sequelize.sync();
+        // Drop and recreate tables
+        await sequelize.sync({ force: true });
+        console.log('Database tables dropped and recreated.');
 
         // Preload initial data
         await preloadData();

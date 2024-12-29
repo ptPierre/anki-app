@@ -3,10 +3,17 @@ import { LearningPackage } from '../models/learningPackage.model';
 
 const router = Router();
 
-// Get all learning packages
+// Get all learning packages for a user
 router.get('/', async (req: Request, res: Response) => {
     try {
-        const packages = await LearningPackage.findAll();
+        const userId = req.query.userId;
+        if (!userId) {
+            return res.status(400).send('UserId is required');
+        }
+
+        const packages = await LearningPackage.findAll({
+            where: { userId }
+        });
         res.json(packages);
     } catch (err) {
         res.status(500).send('Error fetching learning packages');
@@ -17,7 +24,15 @@ router.get('/', async (req: Request, res: Response) => {
 router.get('/:id', async (req: Request, res: Response) => {
     try {
         const id = parseInt(req.params.id);
-        const pkg = await LearningPackage.findByPk(id);
+        const userId = req.query.userId;
+
+        if (!userId) {
+            return res.status(400).send('UserId is required');
+        }
+
+        const pkg = await LearningPackage.findOne({
+            where: { id, userId }
+        });
 
         if (pkg) {
             res.json(pkg);
@@ -31,14 +46,21 @@ router.get('/:id', async (req: Request, res: Response) => {
 
 // Create a new learning package
 router.post('/', async (req: Request, res: Response) => {
-    const { title, description, category, targetAudience, difficultyLevel } = req.body;
+    const { title, description, category, targetAudience, difficultyLevel, userId } = req.body;
 
-    if (!title || !description || !category || !targetAudience || !difficultyLevel) {
+    if (!title || !description || !category || !targetAudience || !difficultyLevel || !userId) {
         return res.status(400).send('Missing mandatory fields');
     }
 
     try {
-        const newPackage = await LearningPackage.create({ title, description, category, targetAudience, difficultyLevel });
+        const newPackage = await LearningPackage.create({ 
+            title, 
+            description, 
+            category, 
+            targetAudience, 
+            difficultyLevel,
+            userId 
+        });
         res.status(201).json(newPackage);
     } catch (err) {
         res.status(500).send('Error creating the learning package');
@@ -49,7 +71,15 @@ router.post('/', async (req: Request, res: Response) => {
 router.put('/:id', async (req: Request, res: Response) => {
     try {
         const id = parseInt(req.params.id);
-        const pkg = await LearningPackage.findByPk(id);
+        const userId = req.body.userId;
+
+        if (!userId) {
+            return res.status(400).send('UserId is required');
+        }
+
+        const pkg = await LearningPackage.findOne({
+            where: { id, userId }
+        });
 
         if (!pkg) {
             return res.status(404).send(`Entity not found for id: ${id}`);
@@ -66,26 +96,24 @@ router.put('/:id', async (req: Request, res: Response) => {
 router.delete('/:id', async (req: Request, res: Response) => {
     try {
         const id = parseInt(req.params.id);
-        const pkg = await LearningPackage.findByPk(id);
+        const userId = req.query.userId;
+
+        if (!userId) {
+            return res.status(400).send('UserId is required');
+        }
+
+        const pkg = await LearningPackage.findOne({
+            where: { id, userId }
+        });
 
         if (!pkg) {
             return res.status(404).send(`Entity not found for id: ${id}`);
         }
 
         await pkg.destroy();
-        res.status(204).send(); // 204 No Content
+        res.status(204).send();
     } catch (err) {
         res.status(500).send('Error deleting the learning package');
-    }
-});
-
-// Get package summaries
-router.get('/summaries', async (req: Request, res: Response) => {
-    try {
-        const summaries = await LearningPackage.findAll({ attributes: ['id', 'title'] });
-        res.json(summaries);
-    } catch (err) {
-        res.status(500).send('Error fetching package summaries');
     }
 });
 

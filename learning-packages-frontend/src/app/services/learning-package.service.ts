@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-
 import { LearningPackage } from '../models/learning-package.model';
 
 @Injectable({
@@ -12,23 +11,33 @@ export class LearningPackageService {
 
   constructor(private http: HttpClient) {}
 
+  private getCurrentUserId(): number {
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    return user.id;
+  }
+
   getAllPackages(): Observable<LearningPackage[]> {
-    return this.http.get<LearningPackage[]>(this.apiUrl);
+    const userId = this.getCurrentUserId();
+    return this.http.get<LearningPackage[]>(`${this.apiUrl}?userId=${userId}`);
   }
 
   getPackageById(id: number): Observable<LearningPackage> {
-    return this.http.get<LearningPackage>(`${this.apiUrl}/${id}`);
+    const userId = this.getCurrentUserId();
+    return this.http.get<LearningPackage>(`${this.apiUrl}/${id}?userId=${userId}`);
   }
 
   createPackage(pkg: Partial<LearningPackage>): Observable<LearningPackage> {
-    return this.http.post<LearningPackage>(this.apiUrl, pkg);
+    const userId = this.getCurrentUserId();
+    return this.http.post<LearningPackage>(this.apiUrl, { ...pkg, userId });
   }
 
   updatePackage(id: number, pkg: Partial<LearningPackage>): Observable<LearningPackage> {
-    return this.http.put<LearningPackage>(`${this.apiUrl}/${id}`, pkg);
+    const userId = this.getCurrentUserId();
+    return this.http.put<LearningPackage>(`${this.apiUrl}/${id}`, { ...pkg, userId });
   }
 
   deletePackage(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+    const userId = this.getCurrentUserId();
+    return this.http.delete<void>(`${this.apiUrl}/${id}?userId=${userId}`);
   }
 }
