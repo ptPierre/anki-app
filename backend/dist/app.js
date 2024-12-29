@@ -13,35 +13,50 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
+const http_1 = require("http");
+const socket_io_1 = require("socket.io");
 const learningPackage_routes_1 = __importDefault(require("./routes/learningPackage.routes"));
 const auth_routes_1 = __importDefault(require("./routes/auth.routes"));
 const database_config_1 = require("./config/database.config");
-const learningPackage_model_1 = require("./models/learningPackage.model");
 const cors_1 = __importDefault(require("cors"));
+const learningPackage_model_1 = require("./models/learningPackage.model");
 const user_model_1 = require("./models/user.model");
 const bcrypt_1 = __importDefault(require("bcrypt"));
+const websocket_handlers_1 = require("./websocket/websocket.handlers");
 const app = (0, express_1.default)();
-const port = 3000;
+const httpServer = (0, http_1.createServer)(app);
+const io = new socket_io_1.Server(httpServer, {
+    cors: {
+        origin: "http://localhost:4200",
+        methods: ["GET", "POST"],
+        credentials: true
+    }
+});
 app.use((0, cors_1.default)());
 app.use(express_1.default.json());
 app.use('/api/package', learningPackage_routes_1.default);
 app.use('/api/auth', auth_routes_1.default);
+// Health check endpoint
 app.get('/api/liveness', (req, res) => {
     res.status(200).send('OK');
 });
 // Function to preload data into the database
 function preloadData() {
     return __awaiter(this, void 0, void 0, function* () {
-        let user = yield user_model_1.User.findOne();
-        if (!user) {
-            const hashedPassword = yield bcrypt_1.default.hash('demo123', 10); // Hash the password
-            user = yield user_model_1.User.create({
+        // Create demo user if it doesn't exist
+        const demoUser = yield user_model_1.User.findOne({ where: { username: 'demo' } });
+        if (!demoUser) {
+            const hashedPassword = yield bcrypt_1.default.hash('demo123', 10);
+            yield user_model_1.User.create({
                 username: 'demo',
-                password: hashedPassword // Store hashed password
+                password: hashedPassword
             });
+            console.log('Demo user created');
         }
+        // Create demo packages if none exist
         const count = yield learningPackage_model_1.LearningPackage.count();
         if (count === 0) {
+            const user = yield user_model_1.User.findOne({ where: { username: 'demo' } });
             yield learningPackage_model_1.LearningPackage.bulkCreate([
                 {
                     title: 'Learn TypeScript',
@@ -80,8 +95,15 @@ function preloadData() {
         }
     });
 }
+// Setup WebSocket handlers
+(0, websocket_handlers_1.setupWebSocketHandlers)(io);
+// Add this log
+io.on('connection', (socket) => {
+    console.log('Client connected to WebSocket');
+});
 // Start server and connect to database
-app.listen(port, () => __awaiter(void 0, void 0, void 0, function* () {
+const port = 3000;
+httpServer.listen(port, () => __awaiter(void 0, void 0, void 0, function* () {
     try {
         // Connect to the database
         yield database_config_1.sequelize.authenticate();

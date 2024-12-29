@@ -3,9 +3,9 @@ import { User } from '../models/user.model';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
-const router = Router();
+export const JWT_SECRET = 'your-secret-key';
 
-const JWT_SECRET = 'your-secret-key';
+const router = Router();
 
 // Signup endpoint
 router.post('/signup', async (req, res) => {
@@ -57,13 +57,28 @@ router.post('/login', async (req: Request, res: Response) => {
       return res.status(400).json({ message: 'Missing username or password' });
     }
 
-    // Find user
+    // Handle demo user
+    if (username === 'demo' && password === 'demo123') {
+      const token = jwt.sign(
+        { id: 1, username: 'demo' },
+        JWT_SECRET,
+        { expiresIn: '24h' }
+      );
+
+      return res.status(200).json({
+        token,
+        user: {
+          id: 1,
+          username: 'demo'
+        }
+      });
+    }
+
     const user = await User.findOne({ where: { username } });
     if (!user) {
       return res.status(401).json({ message: 'Invalid credentials' });
     }
 
-    // Verify password
     const isValidPassword = await bcrypt.compare(password, user.password);
     if (!isValidPassword) {
       return res.status(401).json({ message: 'Invalid credentials' });
@@ -78,7 +93,7 @@ router.post('/login', async (req: Request, res: Response) => {
 
     // Return user info and token
     res.status(200).json({
-      token,
+      token: token,  // Send raw token
       user: {
         id: user.id,
         username: user.username

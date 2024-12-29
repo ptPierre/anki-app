@@ -15,9 +15,9 @@ const router = (0, express_1.Router)();
 // Get all learning packages for a user
 router.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const userId = req.query.userId;
-        if (!userId) {
-            return res.status(400).send('UserId is required');
+        const userId = Number(req.query.userId);
+        if (isNaN(userId)) {
+            return res.status(400).send('Invalid userId');
         }
         const packages = yield learningPackage_model_1.LearningPackage.findAll({
             where: { userId }
@@ -32,9 +32,9 @@ router.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 router.get('/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const id = parseInt(req.params.id);
-        const userId = req.query.userId;
-        if (!userId) {
-            return res.status(400).send('UserId is required');
+        const userId = Number(req.query.userId);
+        if (isNaN(userId)) {
+            return res.status(400).send('Invalid userId');
         }
         const pkg = yield learningPackage_model_1.LearningPackage.findOne({
             where: { id, userId }
@@ -75,9 +75,9 @@ router.post('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 router.put('/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const id = parseInt(req.params.id);
-        const userId = req.body.userId;
-        if (!userId) {
-            return res.status(400).send('UserId is required');
+        const userId = Number(req.body.userId);
+        if (isNaN(userId)) {
+            return res.status(400).send('Invalid userId');
         }
         const pkg = yield learningPackage_model_1.LearningPackage.findOne({
             where: { id, userId }
@@ -96,9 +96,9 @@ router.put('/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () 
 router.delete('/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const id = parseInt(req.params.id);
-        const userId = req.query.userId;
-        if (!userId) {
-            return res.status(400).send('UserId is required');
+        const userId = Number(req.query.userId);
+        if (isNaN(userId)) {
+            return res.status(400).send('Invalid userId');
         }
         const pkg = yield learningPackage_model_1.LearningPackage.findOne({
             where: { id, userId }

@@ -6,9 +6,9 @@ const router = Router();
 // Get all learning packages for a user
 router.get('/', async (req: Request, res: Response) => {
     try {
-        const userId = req.query.userId;
-        if (!userId) {
-            return res.status(400).send('UserId is required');
+        const userId = Number(req.query.userId);
+        if (isNaN(userId)) {
+            return res.status(400).send('Invalid userId');
         }
 
         const packages = await LearningPackage.findAll({
@@ -24,10 +24,9 @@ router.get('/', async (req: Request, res: Response) => {
 router.get('/:id', async (req: Request, res: Response) => {
     try {
         const id = parseInt(req.params.id);
-        const userId = req.query.userId;
-
-        if (!userId) {
-            return res.status(400).send('UserId is required');
+        const userId = Number(req.query.userId);
+        if (isNaN(userId)) {
+            return res.status(400).send('Invalid userId');
         }
 
         const pkg = await LearningPackage.findOne({
@@ -71,10 +70,9 @@ router.post('/', async (req: Request, res: Response) => {
 router.put('/:id', async (req: Request, res: Response) => {
     try {
         const id = parseInt(req.params.id);
-        const userId = req.body.userId;
-
-        if (!userId) {
-            return res.status(400).send('UserId is required');
+        const userId = Number(req.body.userId);
+        if (isNaN(userId)) {
+            return res.status(400).send('Invalid userId');
         }
 
         const pkg = await LearningPackage.findOne({
@@ -96,10 +94,9 @@ router.put('/:id', async (req: Request, res: Response) => {
 router.delete('/:id', async (req: Request, res: Response) => {
     try {
         const id = parseInt(req.params.id);
-        const userId = req.query.userId;
-
-        if (!userId) {
-            return res.status(400).send('UserId is required');
+        const userId = Number(req.query.userId);
+        if (isNaN(userId)) {
+            return res.status(400).send('Invalid userId');
         }
 
         const pkg = await LearningPackage.findOne({

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
+import { BehaviorSubject, Observable, of } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
 @Injectable({
@@ -28,21 +28,7 @@ export class AuthService {
   }
 
   login(username: string, password: string): Observable<any> {
-    // For demo purposes, handle the demo user locally
-    if (username === 'demo' && password === 'demo123') {
-      const mockResponse = {
-        token: 'demo-token',
-        user: {
-          id: 1,
-          username: 'demo'
-        }
-      };
-      localStorage.setItem('token', mockResponse.token);
-      localStorage.setItem('user', JSON.stringify(mockResponse.user));
-      this.isAuthenticatedSubject.next(true);
-      return of(mockResponse);
-    }
-
+    // All authentication is handled by the backend
     return this.http.post(`${this.apiUrl}/login`, { username, password })
       .pipe(
         tap((response: any) => {
@@ -65,7 +51,7 @@ export class AuthService {
   }
 
   private hasValidToken(): boolean {
-    const token = localStorage.getItem('token');
+    const token = this.getAuthToken();
     return !!token;
   }
 

@@ -4,7 +4,7 @@ import { AuthService } from '../services/auth.service';
 
 export const AuthGuard = () => {
   const router = inject(Router);
-  const authService = inject(AuthService);
+  const authService = inject(AuthService) as AuthService;
 
   if (!authService.isAuthenticated()) {
     router.navigate(['/login']);

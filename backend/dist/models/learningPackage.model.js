@@ -13,14 +13,8 @@ LearningPackage.init({
     category: { type: sequelize_1.DataTypes.STRING, allowNull: false },
     targetAudience: { type: sequelize_1.DataTypes.STRING, allowNull: false },
     difficultyLevel: { type: sequelize_1.DataTypes.INTEGER, allowNull: false },
-    userId: {
-        type: sequelize_1.DataTypes.INTEGER,
-        allowNull: false,
-        references: { model: 'Users', key: 'id' },
-    },
+    userId: { type: sequelize_1.DataTypes.INTEGER, allowNull: false }
 }, {
     sequelize: database_config_1.sequelize,
-    modelName: 'LearningPackage',
-    tableName: 'LearningPackages',
-    timestamps: false,
+    modelName: 'LearningPackage'
 });
