@@ -2,6 +2,12 @@
 
 A full-stack web application for managing learning packages with real-time statistics and export capabilities.
 
+# Prerequis
+a Postgre database
+name: 'LearningFactDb'
+a user with all priviledges: 'learningDbUser'
+the password : 'password'
+
 ## Quick Start
 
 1. Start the backend:
@@ -18,7 +24,21 @@ npm install
 ng serve
 ```
 
-The application will be available at `http://localhost:4200`
+## Demo Account
+
+You can connect with the demo account 
+```
+Username: demo
+Password: demo123
+```
+
+## Development
+
+The application uses:
+- Frontend dev server: `http://localhost:4200`
+- Backend API: `http://localhost:3000`
+- WebSocket connection: `ws://localhost:3000`
+ -=swagger: `http://localhost:3000/api-docs` 
 
 ## Architecture Overview
 
@@ -38,7 +58,7 @@ The application will be available at `http://localhost:4200`
 
 ### Backend (Node.js/Express)
 
-#### API Routes
+#### API Routes / swagger
 - **Auth**: `/api/auth/login`, `/api/auth/signup`
 - **Packages**: CRUD operations via `/api/package`
 - **Stats**: Activity data via `/api/package/stats/creation-history`
@@ -46,6 +66,7 @@ The application will be available at `http://localhost:4200`
 #### WebSocket Features
 - Real-time package export to CSV
 - Secure socket connections with JWT
+
 
 ## Key Features
 
@@ -75,12 +96,14 @@ The application will be available at `http://localhost:4200`
 - Highcharts
 - Socket.io-client
 - Bootstrap CSS
+- ag-grid
 
 ### Backend
 - Node.js/Express
 - Sequelize ORM
 - Socket.io
-- SQLite database
+- Postgre database
+- swagger
 
 ## Data Models
 
@@ -97,39 +120,4 @@ interface LearningPackage {
   createdAt?: Date;
 }
 ```
-
-## Demo Account
-```
-Username: demo
-Password: demo123
-```
-
-## Development
-
-The application uses:
-- Frontend dev server: `http://localhost:4200`
-- Backend API: `http://localhost:3000`
-- WebSocket connection: `ws://localhost:3000`
-
-## Features in Detail
-
-1. **Authentication Flow**
-   - JWT-based authentication
-   - Automatic token management
-   - Protected route navigation
-
-2. **Package Management**
-   - Intuitive CRUD interface
-   - Real-time updates
-   - Data validation
-
-3. **Statistics**
-   - Dynamic activity charts
-   - Historical data visualization
-   - Interactive data exploration
-
-4. **Export Capability**
-   - WebSocket-based export
-   - CSV format
-   - Progress tracking
 
