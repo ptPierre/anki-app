@@ -40,4 +40,9 @@ export class LearningPackageService {
     const userId = this.getCurrentUserId();
     return this.http.delete<void>(`${this.apiUrl}/${id}?userId=${userId}`);
   }
+
+  getPackageCreationHistory(): Observable<any> {
+    const userId = this.getCurrentUserId();
+    return this.http.get(`${this.apiUrl}/stats/creation-history?userId=${userId}`);
+  }
 }
