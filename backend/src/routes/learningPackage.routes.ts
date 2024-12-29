@@ -1,7 +1,60 @@
 import { Router, Request, Response } from 'express';
 import { LearningPackage } from '../models/learningPackage.model';
+import { Op } from 'sequelize';
+import { sequelize } from '../config/database.config';
 
 const router = Router();
+
+interface PackageStats {
+  date: string;
+  count: string | number;
+}
+
+// Stats route should come before any routes with parameters
+router.get('/stats/creation-history', async (req: Request, res: Response) => {
+  try {
+    const userId = Number(req.query.userId);
+    console.log('Stats requested for userId:', userId);
+
+    const endDate = new Date();
+    const startDate = new Date();
+    startDate.setDate(endDate.getDate() - 6);
+    console.log('Date range:', { startDate, endDate });
+
+    const packages = await LearningPackage.findAll({
+      where: {
+        userId,
+        createdAt: {
+          [Op.between]: [startDate, endDate]
+        }
+      },
+      attributes: [
+        [sequelize.fn('date', sequelize.col('createdAt')), 'date'],
+        [sequelize.fn('count', sequelize.col('id')), 'count']
+      ],
+      group: [sequelize.fn('date', sequelize.col('createdAt'))],
+      raw: true
+    }) as unknown as PackageStats[];
+    
+    console.log('Raw packages data:', packages);
+
+    const result = [];
+    for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
+      const dateStr = d.toISOString().split('T')[0];
+      const existingData = packages.find(p => p.date === dateStr);
+      result.push({
+        date: dateStr,
+        count: existingData ? Number(existingData.count) : 0
+      });
+    }
+    
+    console.log('Final result:', result);
+    res.json(result);
+  } catch (error) {
+    console.error('Error fetching package creation history:', error);
+    res.status(500).send('Error fetching statistics');
+  }
+});
 
 // Get all learning packages for a user
 router.get('/', async (req: Request, res: Response) => {

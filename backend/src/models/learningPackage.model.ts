@@ -9,6 +9,7 @@ interface PackageAttributes {
   targetAudience: string;
   difficultyLevel: number;
   userId: number;
+  createdAt?: Date;
 }
 
 export class LearningPackage extends Model<PackageAttributes> implements PackageAttributes {
@@ -19,6 +20,7 @@ export class LearningPackage extends Model<PackageAttributes> implements Package
   public targetAudience!: string;
   public difficultyLevel!: number;
   public userId!: number;
+  public createdAt!: Date;
 }
 
 LearningPackage.init(

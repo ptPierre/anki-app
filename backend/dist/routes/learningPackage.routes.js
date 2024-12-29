@@ -11,7 +11,50 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const learningPackage_model_1 = require("../models/learningPackage.model");
+const sequelize_1 = require("sequelize");
+const database_config_1 = require("../config/database.config");
 const router = (0, express_1.Router)();
+// Stats route should come before any routes with parameters
+router.get('/stats/creation-history', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const userId = Number(req.query.userId);
+        console.log('Stats requested for userId:', userId);
+        const endDate = new Date();
+        const startDate = new Date();
+        startDate.setDate(endDate.getDate() - 6);
+        console.log('Date range:', { startDate, endDate });
+        const packages = yield learningPackage_model_1.LearningPackage.findAll({
+            where: {
+                userId,
+                createdAt: {
+                    [sequelize_1.Op.between]: [startDate, endDate]
+                }
+            },
+            attributes: [
+                [database_config_1.sequelize.fn('date', database_config_1.sequelize.col('createdAt')), 'date'],
+                [database_config_1.sequelize.fn('count', database_config_1.sequelize.col('id')), 'count']
+            ],
+            group: [database_config_1.sequelize.fn('date', database_config_1.sequelize.col('createdAt'))],
+            raw: true
+        });
+        console.log('Raw packages data:', packages);
+        const result = [];
+        for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
+            const dateStr = d.toISOString().split('T')[0];
+            const existingData = packages.find(p => p.date === dateStr);
+            result.push({
+                date: dateStr,
+                count: existingData ? Number(existingData.count) : 0
+            });
+        }
+        console.log('Final result:', result);
+        res.json(result);
+    }
+    catch (error) {
+        console.error('Error fetching package creation history:', error);
+        res.status(500).send('Error fetching statistics');
+    }
+}));
 // Get all learning packages for a user
 router.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {

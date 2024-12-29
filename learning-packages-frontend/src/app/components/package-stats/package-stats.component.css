@@ -1,0 +1,14 @@
+.chart-container {
+  width: 100%;
+  height: 400px;
+  display: block;
+}
+
+.card {
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.card-title {
+  color: #333;
+  margin-bottom: 1.5rem;
+} 

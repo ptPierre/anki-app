@@ -14,6 +14,7 @@ import { LearningPackage } from '../../models/learning-package.model';
       <div class="d-flex justify-content-between align-items-center mb-4">
         <h2>Learning Packages</h2>
         <div>
+          <button class="btn btn-info me-2" (click)="viewStats()">View Stats</button>
           <button class="btn btn-success me-2" (click)="exportPackages()">
             Export Packages
           </button>
@@ -103,5 +104,9 @@ export class PackageListComponent implements OnInit {
         console.log('Export completed');
       }
     });
+  }
+
+  viewStats(): void {
+    this.router.navigate(['/stats']);
   }
 }
