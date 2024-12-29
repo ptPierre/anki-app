@@ -9,6 +9,8 @@ import { LearningPackage } from './models/learningPackage.model';
 import { User } from './models/user.model';
 import bcrypt from 'bcrypt';
 import { setupWebSocketHandlers } from './websocket/websocket.handlers';
+import { setupSwagger } from './swaggerConfig';
+
 
 const app = express();
 const httpServer = createServer(app);
@@ -22,6 +24,9 @@ const io = new Server(httpServer, {
 
 app.use(cors());
 app.use(express.json());
+
+// Register Swagger documentation
+setupSwagger(app);
 
 app.use('/api/package', learningPackageRoutes);
 app.use('/api/auth', authRoutes);
@@ -112,4 +117,5 @@ httpServer.listen(port, async () => {
     console.error('Unable to connect to the database:', error);
   }
   console.log(`Server is running at http://localhost:${port}`);
+  console.log(`API swagger documentation available at http://localhost:${port}/api-docs`);
 });
