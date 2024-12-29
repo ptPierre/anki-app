@@ -6,6 +6,19 @@
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
       <span class="navbar-toggler-icon"></span>
     </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item" *ngIf="isAuthenticated">
+          <a class="nav-link" routerLink="/packages" routerLinkActive="active">Packages</a>
+        </li>
+        <li class="nav-item" *ngIf="isAuthenticated">
+          <a class="nav-link" routerLink="/packages/new" routerLinkActive="active">Create New</a>
+        </li>
+      </ul>
+      <button *ngIf="isAuthenticated" class="btn btn-outline-danger" (click)="logout()">
+        Logout
+      </button>
+    </div>
   </div>
 </nav>
 
