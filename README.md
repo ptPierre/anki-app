@@ -3,10 +3,13 @@
 A full-stack web application for managing learning packages with real-time statistics and export capabilities.
 
 # Prerequis
-a Postgre database
+A Postgre database
+
 name: 'LearningFactDb'
-a user with all priviledges: 'learningDbUser'
-the password : 'password'
+
+user with all priviledges: 'learningDbUser'
+
+password : 'password'
 
 ## Quick Start
 
@@ -19,7 +22,7 @@ npm run dev
 
 2. Start the frontend (in a new terminal):
 ```bash
-cd learning-packages-frontend
+cd frontend
 npm install
 ng serve
 ```
@@ -38,7 +41,7 @@ The application uses:
 - Frontend dev server: `http://localhost:4200`
 - Backend API: `http://localhost:3000`
 - WebSocket connection: `ws://localhost:3000`
- -=swagger: `http://localhost:3000/api-docs` 
+- Swagger: `http://localhost:3000/api-docs` 
 
 ## Architecture Overview
 
