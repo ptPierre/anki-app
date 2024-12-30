@@ -2,7 +2,7 @@
 
 A full-stack web application for managing learning packages with real-time statistics and export capabilities.
 
-# Prerequis
+# Prerequisite
 A Postgre database
 
 name: 'LearningFactDb'
