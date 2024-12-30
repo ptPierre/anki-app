@@ -51,7 +51,7 @@ The application uses:
 ![Login](images/login.png)
 
 - **Signup**: User registration interface
-![Signup](images/signup.png)
+![Signup](images/sign up.png)
 
 - **Package List**: Main dashboard showing all learning packages using ag-grid
 ![Package List](images/Package-list.png) 
