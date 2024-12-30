@@ -2,6 +2,15 @@
 
 A full-stack web application for managing learning packages with real-time statistics and export capabilities.
 
+# Prerequisite
+A Postgre database
+
+name: 'LearningFactDb'
+
+user with all priviledges: 'learningDbUser'
+
+password : 'password'
+
 ## Quick Start
 
 1. Start the backend:
@@ -13,12 +22,25 @@ npm run dev
 
 2. Start the frontend (in a new terminal):
 ```bash
-cd learning-packages-frontend
+cd frontend
 npm install
 ng serve
 ```
 
-The application will be available at `http://localhost:4200`
+## Demo Account
+
+You can connect with the demo account 
+```
+Username: demo
+Password: demo123
+```
+
+## Development
+
+The application uses:
+- Frontend dev server: `http://localhost:4200`
+- Backend API: `http://localhost:3000`
+- Swagger: `http://localhost:3000/api-docs` 
 
 ## Architecture Overview
 
@@ -26,26 +48,45 @@ The application will be available at `http://localhost:4200`
 
 #### Core Components
 - **Login**: User authentication interface
-- **Package List**: Main dashboard showing all learning packages
+![Login](images/login.png)
+
+- **Signup**: User registration interface
+![Signup](images/sign up.png)
+
+- **Package List**: Main dashboard showing all learning packages using ag-grid
+![Package List](images/Package-list.png) 
+
 - **Package Form**: Create/Edit package interface
+![Package Form](images/Package-form.png)
+
 - **Package Details**: Detailed package view
+![Package Details](images/Package-detail.png) 
+
 - **Package Stats**: Activity visualization using Highcharts
+![Package Stats](images/Package-stats.png)
 
 #### Services
 - **Auth Service**: JWT authentication management
 - **Learning Package Service**: Package CRUD operations
 - **WebSocket Service**: Real-time export functionality
+![Package exported](images/Package-exported.png)
+
 
 ### Backend (Node.js/Express)
 
-#### API Routes
+#### API Routes / swagger
 - **Auth**: `/api/auth/login`, `/api/auth/signup`
 - **Packages**: CRUD operations via `/api/package`
 - **Stats**: Activity data via `/api/package/stats/creation-history`
+![Swagger](images/Swagger1.png)
+![Swagger](images/Swagger-post.png)
+![Swagger](images/Swagger-get.png)
+![Swagger](images/Swagger-delete.png)
 
 #### WebSocket Features
 - Real-time package export to CSV
 - Secure socket connections with JWT
+
 
 ## Key Features
 
@@ -75,12 +116,14 @@ The application will be available at `http://localhost:4200`
 - Highcharts
 - Socket.io-client
 - Bootstrap CSS
+- Ag-grid
 
 ### Backend
 - Node.js/Express
 - Sequelize ORM
 - Socket.io
-- SQLite database
+- Postgre database
+- Swagger
 
 ## Data Models
 
@@ -97,39 +140,4 @@ interface LearningPackage {
   createdAt?: Date;
 }
 ```
-
-## Demo Account
-```
-Username: demo
-Password: demo123
-```
-
-## Development
-
-The application uses:
-- Frontend dev server: `http://localhost:4200`
-- Backend API: `http://localhost:3000`
-- WebSocket connection: `ws://localhost:3000`
-
-## Features in Detail
-
-1. **Authentication Flow**
-   - JWT-based authentication
-   - Automatic token management
-   - Protected route navigation
-
-2. **Package Management**
-   - Intuitive CRUD interface
-   - Real-time updates
-   - Data validation
-
-3. **Statistics**
-   - Dynamic activity charts
-   - Historical data visualization
-   - Interactive data exploration
-
-4. **Export Capability**
-   - WebSocket-based export
-   - CSV format
-   - Progress tracking
 
