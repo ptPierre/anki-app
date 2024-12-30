@@ -16,6 +16,8 @@ interface PackageStats {
  * /api/package/stats/creation-history:
  *   get:
  *     summary: Get package creation statistics
+ *     tags:
+ *       - Learning Packages
  *     description: Fetches the creation history of learning packages for the last 7 days.
  *     parameters:
  *       - in: query
@@ -83,6 +85,8 @@ router.get('/stats/creation-history', async (req: Request, res: Response) => {
  * /api/package:
  *   get:
  *     summary: Get all learning packages
+ *     tags:
+ *       - Learning Packages
  *     description: Fetches all learning packages for a specific user.
  *     parameters:
  *       - in: query
@@ -120,6 +124,8 @@ router.get('/', async (req: Request, res: Response) => {
  * /api/package/{id}:
  *   get:
  *     summary: Get a learning package by ID
+ *     tags:
+ *       - Learning Packages
  *     description: Fetches a learning package by its ID for a specific user.
  *     parameters:
  *       - in: path
@@ -170,31 +176,49 @@ router.get('/:id', async (req: Request, res: Response) => {
  * @swagger
  * /api/package:
  *   post:
+ *     tags:
+ *       - Learning Packages
  *     summary: Create a new learning package
- *     description: Creates a new learning package for a user.
- *     parameters:
- *       - in: body
- *         name: package
- *         description: The learning package to create
- *         required: true
- *         schema:
- *           type: object
- *           properties:
- *             title:
- *               type: string
- *             description:
- *               type: string
- *             category:
- *               type: string
- *             targetAudience:
- *               type: string
- *             difficultyLevel:
- *               type: integer
- *             userId:
- *               type: integer
+ *     description: Creates a new learning package for a user
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - title
+ *               - description
+ *               - category
+ *               - targetAudience
+ *               - difficultyLevel
+ *               - userId
+ *             properties:
+ *               title:
+ *                 type: string
+ *                 example: "Learn TypeScript"
+ *               description:
+ *                 type: string
+ *                 example: "A comprehensive TypeScript course"
+ *               category:
+ *                 type: string
+ *                 example: "Programming"
+ *               targetAudience:
+ *                 type: string
+ *                 example: "Developers"
+ *               difficultyLevel:
+ *                 type: integer
+ *                 example: 5
+ *               userId:
+ *                 type: integer
+ *                 example: 1
  *     responses:
  *       201:
- *         description: Learning package successfully created
+ *         description: Learning package created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/LearningPackage'
  *       400:
  *         description: Missing mandatory fields
  *       500:
@@ -231,35 +255,71 @@ router.post('/', async (req: Request, res: Response) => {
  * @swagger
  * /api/package/{id}:
  *   put:
+ *     tags:
+ *       - Learning Packages
  *     summary: Update a learning package
- *     description: Updates an existing learning package for a user.
+ *     description: Updates an existing learning package for a user
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
- *         description: The ID of the learning package to update
- *       - in: body
- *         name: package
- *         description: The updated learning package data
- *         required: true
  *         schema:
- *           type: object
- *           properties:
- *             title:
- *               type: string
- *             description:
- *               type: string
- *             category:
- *               type: string
- *             targetAudience:
- *               type: string
- *             difficultyLevel:
- *               type: integer
- *             userId:
- *               type: integer
+ *           type: integer
+ *         description: The ID of the learning package to update
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - title
+ *               - description
+ *               - category
+ *               - targetAudience
+ *               - difficultyLevel
+ *               - userId
+ *             properties:
+ *               title:
+ *                 type: string
+ *                 example: "Updated TypeScript Course"
+ *               description:
+ *                 type: string
+ *                 example: "Updated course description"
+ *               category:
+ *                 type: string
+ *                 example: "Programming"
+ *               targetAudience:
+ *                 type: string
+ *                 example: "Developers"
+ *               difficultyLevel:
+ *                 type: integer
+ *                 example: 5
+ *               userId:
+ *                 type: integer
+ *                 example: 1
  *     responses:
  *       200:
  *         description: Learning package updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: integer
+ *                 title:
+ *                   type: string
+ *                 description:
+ *                   type: string
+ *                 category:
+ *                   type: string
+ *                 targetAudience:
+ *                   type: string
+ *                 difficultyLevel:
+ *                   type: integer
+ *                 userId:
+ *                   type: integer
  *       400:
  *         description: Invalid userId or missing fields
  *       404:
@@ -297,6 +357,8 @@ router.put('/:id', async (req: Request, res: Response) => {
  * @swagger
  * /api/package/{id}:
  *   delete:
+ *     tags:
+ *       - Learning Packages
  *     summary: Delete a learning package
  *     description: Deletes a learning package for a user.
  *     parameters:
