@@ -40,7 +40,6 @@ Password: demo123
 The application uses:
 - Frontend dev server: `http://localhost:4200`
 - Backend API: `http://localhost:3000`
-- WebSocket connection: `ws://localhost:3000`
 - Swagger: `http://localhost:3000/api-docs` 
 
 ## Architecture Overview
@@ -49,15 +48,29 @@ The application uses:
 
 #### Core Components
 - **Login**: User authentication interface
-- **Package List**: Main dashboard showing all learning packages
+![Login](images/login.png)
+
+- **Signup**: User registration interface
+![Signup](images/signup.png)
+
+- **Package List**: Main dashboard showing all learning packages using ag-grid
+![Package List](images/Package-list.png) 
+
 - **Package Form**: Create/Edit package interface
+![Package Form](images/Package-form.png)
+
 - **Package Details**: Detailed package view
+![Package Details](images/Package-detail.png) 
+
 - **Package Stats**: Activity visualization using Highcharts
+![Package Stats](images/Package-stats.png)
 
 #### Services
 - **Auth Service**: JWT authentication management
 - **Learning Package Service**: Package CRUD operations
 - **WebSocket Service**: Real-time export functionality
+![Package exported](images/Package-exported.png)
+
 
 ### Backend (Node.js/Express)
 
@@ -65,6 +78,10 @@ The application uses:
 - **Auth**: `/api/auth/login`, `/api/auth/signup`
 - **Packages**: CRUD operations via `/api/package`
 - **Stats**: Activity data via `/api/package/stats/creation-history`
+![Swagger](images/Swagger1.png)
+![Swagger](images/Swagger-post.png)
+![Swagger](images/Swagger-get.png)
+![Swagger](images/Swagger-delete.png)
 
 #### WebSocket Features
 - Real-time package export to CSV
@@ -99,14 +116,14 @@ The application uses:
 - Highcharts
 - Socket.io-client
 - Bootstrap CSS
-- ag-grid
+- Ag-grid
 
 ### Backend
 - Node.js/Express
 - Sequelize ORM
 - Socket.io
 - Postgre database
-- swagger
+- Swagger
 
 ## Data Models
 
